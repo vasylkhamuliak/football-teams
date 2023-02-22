@@ -56,29 +56,6 @@ new Vue({
         }
       });
 
-      // var sortedPlayers = this.players.slice().sort((a, b) => b.level - a.level);
-      // var currentTeam = 0;
-      // var teamLevels = new Array(this.teamNumber).fill(0);
-
-      // sortedPlayers.forEach((player) => {
-      //   if (this.teams[currentTeam] && currentTeam < this.teamNumber) {
-      //     this.teams[currentTeam].push({'name': player.name, 'level': player.level});
-      //     teamLevels[currentTeam] += parseInt(player.level);
-      //     if (this.teams[currentTeam].length >= Math.ceil(sortedPlayers.length / this.teamNumber)) {
-      //       currentTeam++;
-      //     }
-      //   } else {
-      //     alert('Failed to generate teams. Please try again');
-      //   }
-      // });
-
-      // this.teams.forEach((team, index) => {
-      //   var sumLevel = teamLevels[index];
-      //   var avgLevel = sumLevel / team.length;
-      //   team.push({'name': 'General team level', 'level': sumLevel});
-      //   team.push({'name': 'Average level', 'level': avgLevel.toFixed(2)});
-      // });
-
     },
   }
 });
