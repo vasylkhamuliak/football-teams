@@ -1,61 +1,84 @@
-// отримуємо доступ до форми та кнопки генерації команд
-const form = document.querySelector('#players-form');
-const generateButton = document.querySelector('#generate-button');
+new Vue({
+  el: '#app',
+  data: {
+    players: [
+      { name: 'Vasyl', level: '2' },
+      { name: 'Taras', level: '3' },
+      { name: 'Denis', level: '10' },
+      { name: 'Nastya', level: '9' },
+      { name: 'Ivan', level: '5' },
+      { name: 'Petro', level: '6' },
+      { name: 'Oleksandr', level: '8' },
+      { name: 'Anna', level: '10' }
+    ],
+    teamNumber: 2,
+    teams: []
+  },
+  methods: {
+    addPlayer: function() {
+      this.players.push({ name: '', level: '' });
+    },
+    removePlayer: function(index) {
+      if (this.players && this.players.length > index) {
+        this.players.splice(index, 1);
+      }
+    },
 
-// додаємо обробник подій на кнопку генерації команд
-generateButton.addEventListener('click', generateTeams);
+    generateTeams: function() {
+      if (!this.players || this.players.length === 0) {
+        alert('Please enter player information');
+        return;
+      }
 
-function generateTeams() {
-  // отримуємо кількість команд, що вибрав користувач
-  const teamCount = parseInt(document.querySelector('#team-count').value);
-  
-  // отримуємо список гравців та їх рейтинг
-  const playerList = [];
-  const ratingList = [];
-  const players = document.querySelectorAll('.player-name');
-  const ratings = document.querySelectorAll('.player-rating');
-  
-  // заповнюємо масиви гравців та їх рейтинг
-  for (let i = 0; i < players.length; i++) {
-    playerList.push(players[i].value);
-    ratingList.push(parseInt(ratings[i].value));
+      this.teams = [];
+
+      for (var i = 0; i < this.teamNumber; i++) {
+        this.teams.push([]);
+      }
+
+      var sortedPlayers = this.players.slice().sort((a, b) => b.level - a.level);
+      var teamIndex = 0;
+      var direction = 1; // start assigning to Team 1, then to Team 2, then to Team 1, etc.
+
+      sortedPlayers.forEach((player) => {
+        this.teams[teamIndex].push({'name': player.name, 'level': player.level});
+
+        // Move to the next team
+        teamIndex += direction;
+
+        // If we reach the end of the teams array, start from the last team
+        if (teamIndex === this.teamNumber) {
+          teamIndex = this.teamNumber - 1;
+          direction = -1;
+        } else if (teamIndex === -1) {
+          teamIndex = 0;
+          direction = 1;
+        }
+      });
+
+      // var sortedPlayers = this.players.slice().sort((a, b) => b.level - a.level);
+      // var currentTeam = 0;
+      // var teamLevels = new Array(this.teamNumber).fill(0);
+
+      // sortedPlayers.forEach((player) => {
+      //   if (this.teams[currentTeam] && currentTeam < this.teamNumber) {
+      //     this.teams[currentTeam].push({'name': player.name, 'level': player.level});
+      //     teamLevels[currentTeam] += parseInt(player.level);
+      //     if (this.teams[currentTeam].length >= Math.ceil(sortedPlayers.length / this.teamNumber)) {
+      //       currentTeam++;
+      //     }
+      //   } else {
+      //     alert('Failed to generate teams. Please try again');
+      //   }
+      // });
+
+      // this.teams.forEach((team, index) => {
+      //   var sumLevel = teamLevels[index];
+      //   var avgLevel = sumLevel / team.length;
+      //   team.push({'name': 'General team level', 'level': sumLevel});
+      //   team.push({'name': 'Average level', 'level': avgLevel.toFixed(2)});
+      // });
+
+    },
   }
-  
-  // розподіляємо гравців на команди
-  const teams = [];
-  for (let i = 0; i < teamCount; i++) {
-    teams.push([]);
-  }
-  
-  // сортуємо гравців за рейтингом
-  const sortedPlayers = playerList.slice().sort((a, b) => {
-    const aIndex = playerList.indexOf(a);
-    const bIndex = playerList.indexOf(b);
-    return ratingList[bIndex] - ratingList[aIndex];
-  });
-  
-  // розподіляємо гравців на команди
-  let teamIndex = 0;
-  for (let i = 0; i < sortedPlayers.length; i++) {
-    teams[teamIndex].push(sortedPlayers[i]);
-    teamIndex = (teamIndex + 1) % teamCount;
-  }
-  
-  // виводимо команди на екран
-  const teamContainer = document.querySelector('#team-container');
-  teamContainer.innerHTML = '';
-  for (let i = 0; i < teamCount; i++) {
-    const teamHeading = document.createElement('h2');
-    teamHeading.textContent = `Команда ${i + 1}`;
-    const teamList = document.createElement('ul');
-    for (let j = 0; j < teams[i].length; j++) {
-      const playerItem = document.createElement('li');
-      playerItem.textContent = teams[i][j];
-      teamList.appendChild(playerItem);
-    }
-    const teamDiv = document.createElement('div');
-    teamDiv.appendChild(teamHeading);
-    teamDiv.appendChild(teamList);
-    teamContainer.appendChild(teamDiv);
-  }
-}
+});
