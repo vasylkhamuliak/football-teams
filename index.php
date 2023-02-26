@@ -15,7 +15,7 @@
 		<div v-for="(player, index) in players" :key="index" class="player">
 		  <input v-model.trim="player.name" type="text" placeholder="Name">
 		  <input v-model.number="player.level" type="number" min="1" max="10" placeholder="Level">
-		  <button @click="removePlayer(index)">Remove</button>
+		  <button type="button" @click="removePlayer(index)">Remove</button>
 		</div>
     <button type="button" @click="addPlayer">Add player</button>
     <div class="team-number">
